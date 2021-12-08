@@ -1,0 +1,9 @@
+# Binaries for programs and plugins
+*.cfg
+*.ini
+*.config
+config.*
+*.json
+
+**/bin/*
+**/obj/*
