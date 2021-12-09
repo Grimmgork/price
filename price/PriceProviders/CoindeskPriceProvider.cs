@@ -33,12 +33,12 @@ namespace price.PriceProviders
 
 			string data = client.DownloadString(url.ToString());
 
-			JObject obj = JObject.Parse(data);
+			JToken obj = JObject.Parse(data)["data"][ticker.ToUpper()]["ohlc"];
 
-			double o = (double)obj["data"][ticker.ToUpper()]["ohlc"]["o"];
-			double h = (double)obj["data"][ticker.ToUpper()]["ohlc"]["h"];
-			double l = (double)obj["data"][ticker.ToUpper()]["ohlc"]["l"];
-			double c = (double)obj["data"][ticker.ToUpper()]["ohlc"]["c"];
+			double o = (double)obj["o"];
+			double h = (double)obj["h"];
+			double l = (double)obj["l"];
+			double c = (double)obj["c"];
 			double price = (o + h + l + c) / 4;
 
 			return price;
