@@ -21,7 +21,7 @@ namespace price.PriceProviders
 			apikey = parameters[0];
 		}
 
-		public double GetLatestPrice(string ticker, string convert)
+		public decimal GetLatestPrice(string ticker, string convert)
 		{
 			UriBuilder url = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest");
 			NameValueCollection queryString = HttpUtility.ParseQueryString("");
@@ -38,7 +38,7 @@ namespace price.PriceProviders
 			string data = client.DownloadString(url.ToString());
 
 			JObject obj = JObject.Parse(data);
-			double price = (double)obj["data"][ticker.ToUpper()]["quote"][convert.ToUpper()]["price"];
+			decimal price = (decimal)obj["data"][ticker.ToUpper()]["quote"][convert.ToUpper()]["price"];
 
 			return price;
 		}

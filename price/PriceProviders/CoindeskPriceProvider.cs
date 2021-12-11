@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
+using System.Threading;
 using System.Web;
 
 namespace price.PriceProviders
@@ -16,7 +17,7 @@ namespace price.PriceProviders
 			
 		}
 
-		public double GetLatestPrice(string ticker, string convert)
+		public decimal GetLatestPrice(string ticker, string convert)
 		{
 			UriBuilder url = new UriBuilder("https://production.api.coindesk.com/v2/tb/price/ticker");
 			NameValueCollection queryString = HttpUtility.ParseQueryString("");
@@ -35,11 +36,11 @@ namespace price.PriceProviders
 
 			JToken obj = JObject.Parse(data)["data"][ticker.ToUpper()]["ohlc"];
 
-			double o = (double)obj["o"];
-			double h = (double)obj["h"];
-			double l = (double)obj["l"];
-			double c = (double)obj["c"];
-			double price = (o + h + l + c) / 4;
+			decimal o = (decimal)obj["o"];
+			decimal h = (decimal)obj["h"];
+			decimal l = (decimal)obj["l"];
+			decimal c = (decimal)obj["c"];
+			decimal price = (o + h + l + c) / 4;
 
 			return price;
 		}

@@ -6,7 +6,7 @@ namespace price.PriceProviders
 {
 	public interface IPriceProvider
 	{
-		public double GetLatestPrice(string ticker, string convert);
+		public decimal GetLatestPrice(string ticker, string convert);
 		public void Configure(string[] parameters);
 	}
 }

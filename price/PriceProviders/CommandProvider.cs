@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace price.PriceProviders
 {
-	public class TestProvider : IPriceProvider
+	public class CommandProvider : IPriceProvider
 	{
 		public void Configure(string[] parameters)
 		{
 			
 		}
 
-		public double GetLatestPrice(string ticker, string convert)
+		public decimal GetLatestPrice(string ticker, string convert)
 		{
-			return 42d;
+			
+			return 13;
 		}
 	}
 }
