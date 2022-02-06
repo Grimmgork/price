@@ -38,66 +38,23 @@ namespace price
 
 		static void RenderTickersToConsole(TickerRow[] tickers)
 		{
-			Dictionary<int,Task<decimal>> tasks = new Dictionary<int, Task<decimal>>();
-
-			decimal[] results = new decimal[tickers.Length];
-			HashSet<int> error = new HashSet<int>();
-
-			int[] rowLengths = new int[tickers.Length];
-
+			Task<decimal>[] tasks = new Task<decimal>[tickers.Length];
 			for (int i = 0; i < tickers.Length; i++){
 				TickerRow t = tickers[i];
-				tasks.Add(i, GetPriceAsync(t.providerid, t.ticker, t.convert));
+				tasks[i] = GetPriceAsync(t.providerid, t.ticker, t.convert);
 			}
 
-			while(true)
-			{
-				string rows = "";
-				for (int i = 0; i < tickers.Length; i++)
-				{
-					string value = "...";
-					if (tasks.ContainsKey(i))
-					{
-						Task<decimal> task = tasks[i];
-						if (task.IsCompleted)
-						{
-							if(task.IsFaulted)
-							{
-								tasks.Remove(i);
-								error.Add(i);
-								value = "ERROR";
-							}
-							else
-							{
-								results[i] = task.Result;
-								tasks.Remove(i);
-								value = results[i].ToString();
-							}
-						}
-					}
-					else
-					{
-						if (error.Contains(i))
-							value = "ERROR";
-						else
-							value = results[i].ToString();
-					}
+			Console.WriteLine("fetching ...");
+			Task.WaitAll(tasks);
+			Console.WriteLine("done!");
+			Console.WriteLine();
+			for(int i = 0; i < tickers.Length; i++){
+				Task<decimal> task = tasks[i];
+				TickerRow ticker = tickers[i];
 
-					int lastLength = rowLengths[i];
-					string row = FormatRow(tickers[i].ticker, tickers[i].convert, value) + "\n";
-					rowLengths[i] = row.Length;
-					row.PadRight(lastLength, ' ');
-					rows += row;
-				}
-
-				Console.SetCursorPosition(0, Console.GetCursorPosition().Top - tickers.Length);
-				Console.Write(rows);
-
-				if (tasks.Count == 0)
-					break;
-
-				Task.WaitAny(tasks.Values.ToArray());
+				Console.WriteLine(FormatRow(ticker.ticker, ticker.convert, task.Result.ToString()));
 			}
+
 		}
 
 		static string FormatRow(string ticker, string convert, string value)
